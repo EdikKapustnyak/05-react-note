@@ -11,7 +11,7 @@ const instance = axios.create({
 });
 
 interface FetchNotesResponse {
-  notes: Note[], 
+  notes: Note[],
   totalPages: number
 }
 

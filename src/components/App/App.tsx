@@ -10,11 +10,9 @@ import { fetchNotes } from "../../services/noteService";
 import type { Note } from "../../types/note";
 import Pagination from "../Pagination/Pagination";
 
-interface FetchNoteResponse {
+interface FetchNotesResponse {
   notes: Note[];
-  total: number;
-  page: number;
-  perPage: number;
+  totalPages: number
 }
 
 export default function App() {
@@ -29,7 +27,7 @@ export default function App() {
     setPage(1);
   }, [debouncedSearchTerm]);
 
-  const { data, isLoading } = useQuery<FetchNoteResponse>({
+  const { data, isLoading } = useQuery<FetchNotesResponse>({
     queryKey: ["notes", page, debouncedSearchTerm],
     queryFn: () => fetchNotes(page, perPage, debouncedSearchTerm),
     placeholderData: keepPreviousData,
@@ -55,13 +53,14 @@ export default function App() {
         <NoteList notes={data.notes} />
       )}
 
-      {data && data.total > perPage && (
+      {data && data.totalPages > 1 && (
         <Pagination
-          pageCount={Math.ceil(data.total / perPage)}
+          pageCount={data.totalPages}
           currentPage={page}
           onPageChange={setPage}
         />
       )}
+
 
       {isModalOpen && (
         <Modal onClose={closeModal}>
